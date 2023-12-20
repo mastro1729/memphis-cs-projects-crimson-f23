@@ -1,0 +1,29 @@
+<style>
+.adjust{
+  width: 50%; 
+  margin: auto auto;
+}
+</style>
+
+<div class="container mt-4 adjust" style="background-color: #f5f5f5; padding: 20px;">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h2 class="text-center mb-3">Forgot your password?</h2>
+
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+        <%= render "vendors/shared/error_messages", resource: resource %>
+
+        <div class="form-group">
+          <%= f.label :email %>
+          <%= f.email_field :email, class: "form-control", autofocus: true, autocomplete: "email" %>
+        </div>
+
+        <div class="text-center">
+          <%= f.submit "Send me reset password instructions", class: "btn btn-primary btn-block" %>
+        </div>
+      <% end %>
+
+      <%= render "vendors/shared/links" %>
+    </div>
+  </div>
+</div>

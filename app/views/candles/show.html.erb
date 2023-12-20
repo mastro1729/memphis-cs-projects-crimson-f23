@@ -1,0 +1,58 @@
+<div class="row">
+    <div class="col-md-12 text-center mb-4">
+        <div class="card bg-dark text-white p-4 shadow-lg">
+        <a href="/" class="btn btn-secondary position-absolute top-0 start-0 m-3">
+            <i class="fas fa-chevron-circle-left"></i>
+        </a>
+        <div class="stock-status" style="display: flex; justify-content: center; margin-bottom: 30px;">
+        <% if current_vendor && @candle.inventory.present? %>
+            <% stock_count = @candle.inventory.count.to_i %>
+            <% if stock_count < 15 %>
+            <span class="status-tag low-in-stock">
+                <i class="fas fa-exclamation-triangle status-icon"></i> Low in Stock (<%= stock_count %> pieces)
+            </span>
+            <% elsif stock_count >= 15 && stock_count <= 30 %>
+            <span class="status-tag moderate-in-stock">
+                <i class="fas fa-info-circle status-icon"></i> Moderate Stock (<%= stock_count %> pieces)
+            </span>
+            <% else %>
+            <span class="status-tag available">
+                <i class="fas fa-check-circle status-icon"></i> Available (<%= stock_count %> pieces)
+            </span>
+            <% end %>
+            <%= link_to edit_candle_path(@candle), class: "ml-3", style:'color:white' do %>
+            <i class="fas fa-pencil-alt"></i>
+            <% end %>
+        <% end %>
+        </div>
+        <div class="d-flex justify-content-center mb-3">
+            <% if @candle.image.attached? %>
+            <%= image_tag(@candle.image, class: "card-img-top rounded-circle", style: "width: 300px; height: 300px; object-fit: cover;") %>
+            <% else %>
+            <%= image_tag('noimage.png', class: "card-img-top rounded-circle", style: "width: 200px; height: 200px; object-fit: cover;") %>
+            <% end %>
+        </div>
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4"><%= @candle.name %></h2>
+            <p class="card-text text-center fs-9"><%= @candle.description %></p>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="row mt-4">
+    <div class="col-md-12">
+        <div class="row">
+        <% properties = { 'Color': @candle.color, 'Size': @candle.size, 'Fragrance': @candle.fragrance, 'Wax Type': @candle.wax_type, 'Pet Type': @candle.pet_type, 'Silhouette': @candle.silhouette, 'Design Style': @candle.design_style, 'Price': @candle.price } %>
+
+        <% properties.each do |property, value| %>
+            <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label"><strong><%= property %>:</strong></label>
+                <input type="text" class="form-control" value="<%= value.present? ? value : 'N/A' %>" disabled>
+            </div>
+            </div>
+        <% end %>
+        </div>
+    </div>
+    </div>

@@ -1,0 +1,7 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  reward_points_remaining: 1
+
+two:
+  reward_points_remaining: 1

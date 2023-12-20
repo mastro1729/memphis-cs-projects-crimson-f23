@@ -1,0 +1,50 @@
+<h2>Add New Payment Method</h2>
+
+<%= form_with model: @payment_detail, url: payment_details_path, method: :post, data: { turbo: false }, html: { class: 'needs-validation' } do |f| %>
+<div class="new-payment-method">
+  <div class="form-group">
+    <%= f.label :card_type, 'Card Type' %>
+    <%= f.select :card_type, [['Visa'], ['Mastercard'], ['AmericanExpress']], { prompt: 'Select Card Type' }, class: 'form-control' %>
+    <% if @payment_detail.errors[:card_type].any? %>
+      <div class="text-danger">
+        <%= @payment_detail.errors[:card_type].first %>
+      </div>
+    <% end %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :card_no, 'Card Number' %>
+      <%= f.text_field :card_no, class: 'form-control', placeholder: 'Enter card number' %>
+      <% if @payment_detail.errors[:card_no].any? %>
+        <div class="text-danger">
+          <%= @payment_detail.errors[:card_no].first %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :exp, 'Expiration Date' %>
+      <%= f.date_field :exp, class: 'form-control', placeholder: 'Select expiration date' %>
+      <% if @payment_detail.errors[:exp].any? %>
+        <div class="text-danger">
+          <%= @payment_detail.errors[:exp].first %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :cvv, 'CVV' %>
+      <%= f.text_field :cvv, class: 'form-control', placeholder: 'Enter CVV' %>
+      <% if @payment_detail.errors[:cvv].any? %>
+        <div class="text-danger">
+          <%= @payment_detail.errors[:cvv].first %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="text-center">
+      <%= link_to "Back", payment_details_path, class: "btn btn-secondary" %>
+      <%= f.submit "Add New Payment Method", class: 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>

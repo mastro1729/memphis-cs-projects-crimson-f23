@@ -1,0 +1,106 @@
+<style>
+  .col-md-3,
+  .col-md-9 {
+    max-height:100vh;
+    overflow-y: auto;
+  }
+</style>
+
+  <div class="row">
+    <div class="col-md-3">
+      <%= form_with(url: search_filter_path, method: :get, data: { turbo_frame: "candles" }) do %>
+        <div class="input-group mb-3">
+          <%= text_field_tag(:search, nil, class: "form-control", placeholder: "Search by description...") %>
+          <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+        
+        <!-- Filter by Color -->
+        <div class="filter-options mb-3">
+          <h5>Filter by Color</h5>
+          <% @color_options.each do |color| %>
+            <div class="form-check">
+              <%= check_box_tag 'color[]', color.downcase, params[:color]&.include?(color.downcase), id: "#{color.downcase}Color", class: "form-check-input" %>
+              <%= label_tag "#{color.downcase}Color", color, class: "form-check-label" %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Filter by Size -->
+        <div class="filter-options mb-3">
+          <h5>Filter by Size</h5>
+          <% @size_options.each do |size| %>
+            <div class="form-check">
+              <%= check_box_tag 'size[]', size.downcase, params[:size]&.include?(size.downcase), id: "#{size.downcase}Size", class: "form-check-input" %>
+              <%= label_tag "#{size.downcase}Size", size, class: "form-check-label" %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Filter by Fragrance -->
+        <div class="filter-options mb-3">
+          <h5>Filter by Fragrance</h5>
+          <% @fragrance_options.each do |fragrance| %>
+            <div class="form-check">
+              <%= check_box_tag 'fragrance[]', fragrance.downcase, params[:fragrance]&.include?(fragrance.downcase), id: "#{fragrance.downcase}Fragrance", class: "form-check-input" %>
+              <%= label_tag "#{fragrance.downcase}Fragrance", fragrance, class: "form-check-label" %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Filter by Wax Type -->
+        <div class="filter-options mb-3">
+          <h5>Filter by Wax Type</h5>
+          <% @wax_type_options.each do |wax_type| %>
+            <div class="form-check">
+              <%= check_box_tag 'wax_type[]', wax_type.downcase, params[:wax_type]&.include?(wax_type.downcase), id: "#{wax_type.downcase}WaxType", class: "form-check-input" %>
+              <%= label_tag "#{wax_type.downcase}WaxType", wax_type, class: "form-check-label" %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Filter by Pet Type -->
+        <div class="filter-options mb-3">
+          <h5>Filter by Pet Type</h5>
+          <% @pet_type_options.each do |pet_type| %>
+            <div class="form-check">
+              <%= check_box_tag 'pet_type[]', pet_type.downcase, params[:pet_type]&.include?(pet_type.downcase), id: "#{pet_type.downcase}PetType", class: "form-check-input" %>
+              <%= label_tag "#{pet_type.downcase}PetType", pet_type, class: "form-check-label" %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Filter by Silhouette -->
+        <div class="filter-options mb-3">
+          <h5>Filter by Silhouette</h5>
+          <% @silhouette_options.each do |silhouette| %>
+            <div class="form-check">
+              <%= check_box_tag 'silhouette[]', silhouette.downcase, params[:silhouette]&.include?(silhouette.downcase), id: "#{silhouette.downcase}Silhouette", class: "form-check-input" %>
+              <%= label_tag "#{silhouette.downcase}Silhouette", silhouette, class: "form-check-label" %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Filter by Design Style -->
+        <div class="filter-options mb-3">
+          <h5>Filter by Design Style</h5>
+          <% @design_style_options.each do |design_style| %>
+            <div class="form-check">
+              <%= check_box_tag 'design_style[]', design_style.downcase, params[:design_style]&.include?(design_style.downcase), id: "#{design_style.downcase}DesignStyle", class: "form-check-input" %>
+              <%= label_tag "#{design_style.downcase}DesignStyle", design_style, class: "form-check-label" %>
+            </div>
+          <% end %>
+        </div>
+
+      <% end %>
+    </div>
+
+    <div class="col-md-9">
+      <div class="card">
+        <div class="card-body">
+          <turbo-frame id="candles">
+            <%= render "candles/AllCandles", candles: @candles %>
+          </turbo-frame>
+        </div>
+      </div>
+    </div>
+  </div>

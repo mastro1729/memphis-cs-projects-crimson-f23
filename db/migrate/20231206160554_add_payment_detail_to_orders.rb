@@ -1,0 +1,5 @@
+class AddPaymentDetailToOrders < ActiveRecord::Migration[7.0]
+  def change
+    add_reference :orders, :payment_detail, foreign_key: true
+  end
+end

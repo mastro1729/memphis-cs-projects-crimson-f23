@@ -1,0 +1,66 @@
+<div class="container mt-4">
+  <h1 class="mb-4">All Reminders</h1>
+  <% if current_customer %>
+    <div class="mb-4">
+      <%= link_to "Create New Reminder", new_reminder_path, class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+
+  <% if @reminders.any? %>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th>#</th>
+            <th>Reminder Title</th>
+            <th>Reminder Description</th>
+            <th>Reminder Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @reminders.each_with_index do |reminder, index| %>
+            <% row_style = reminder.date.today? ? 'color: blue;font-weight:bold;' : '' %>
+            <tr style="<%= row_style %>">
+              <td><%= index + 1 %></td>
+              <td><%= reminder.title %></td>
+              <td><%= reminder.description %></td>
+              <td><%= reminder.date %></td>
+              <td class="d-flex align-items-center">
+                <div class="mr-3">
+                  <%= link_to edit_reminder_path(reminder), class: 'btn btn-info btn-sm', title: 'Edit' do %>
+                    <i class="fas fa-edit"></i> Edit
+                  <% end %>
+                </div>
+                <div class="mr-1">
+                  <%= button_to reminder_path(reminder), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm', remote: true, title: 'Delete' do %>
+                    <i class="fas fa-trash"></i> Delete
+                  <% end %>
+                </div>
+                <div>
+                  <% unless reminder.status %>
+                    <%= button_to acknowledge_reminder_path(reminder), method: :patch, remote: true, class: 'btn btn-success btn-sm', title: 'Acknowledge' do %>
+                      <i class="fas fa-check"></i> Acknowledge
+                    <% end %>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="alert alert-info" role="alert">
+      <p>No reminders right now.</p>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  th,
+  td {
+    text-align: center;
+    vertical-align: middle;
+  }
+</style>

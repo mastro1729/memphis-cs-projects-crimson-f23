@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Payment Method</title>
+  <style>
+
+    .payments {
+      width: 50vw;
+      margin: auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .text-ash {
+      color: #808080;
+    }
+
+    .payment-card {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+
+    .payment-card img {
+      width: 40px;
+      height: 30px;
+      border-radius: 4px;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      margin:5px;
+    }
+
+    .btn-primary {
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+    }
+
+    .btn-secondary {
+      background-color: #95a5a6;
+      color: #fff;
+      border: none;
+    }
+
+    .btn-secondary:hover,
+    .btn-primary:hover {
+      opacity: 0.8;
+    }
+
+  .animate {
+    display: inline-block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: zoomInOut 2s infinite;
+  }
+
+  @keyframes zoomInOut {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  </style>
+</head>
+<body>
+  <div class="payment-methods payments">
+    <div class="text-center mt-5 mb-4">
+      <h2 class="font-weight-bold text-ash">Select Payment Method</h2>
+    </div>
+
+    <% if @payment_details.empty? %>
+      <div class="text-center">
+        <img src="<%= image_path('add-payment-method.png') %>" alt="No Payment Methods" class="animate" style="width: 100px; height: 100px;">
+        <p class="text-ash mt-3">Please Add a Payment Method to Continue..!</p>
+      </div>
+        <div class="btn-container">
+          <%= link_to cart_items_path, class: "btn btn-secondary" do %> Back to Cart <% end %>
+          <%= link_to "Add New Payment Method", new_payment_detail_path, class: "btn btn-secondary" %>
+        </div>
+    <% else %>
+      <%= form_tag({ controller: 'orders', action: 'order_confirmation' }, method: :get, data: { turbo: false }) do %>
+        <% @payment_details.each do |payment_detail| %>
+          <div class="payment-card bg-light p-3 rounded mb-4 d-flex align-items-center justify-content-between">
+            <div>
+              <%= radio_button_tag(:payment_method, payment_detail.id, required: true) %>
+              <% card_type = payment_detail.card_type.downcase %>
+              <% if card_type == 'visa' %>
+                <img src="<%= image_path('visa.jpeg') %>" class="payment-card-type img-thumbnail mr-3" alt="Visa">
+              <% elsif card_type == 'mastercard' %>
+                <img src="<%= image_path('mastercard.jpeg') %>" class="payment-card-type img-thumbnail mr-3" alt="Mastercard">
+              <% elsif card_type == 'americanexpress' %>
+                <img src="<%= image_path('americanexpress.jpeg') %>" class="payment-card-type img-thumbnail mr-3" alt="American Express">
+              <% else %>
+              <% end %>
+              <span class="font-weight-bold">Card Ending with <%= payment_detail.card_no.last(4) %></span>
+            </div>
+            <div>
+              <%= link_to edit_payment_detail_path(payment_detail), class: "text-secondary mr-2" do %>
+                <i class="fas fa-edit"></i> 
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+        <div class="btn-container">
+          <%= link_to cart_items_path, class: "btn btn-secondary" do %> Back to Cart <% end %>
+          <%= submit_tag "Proceed to Order Summary Page..!", class: "btn btn-primary" %>
+          <%= link_to "Add New Payment Method", new_payment_detail_path, class: "btn btn-secondary" %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <% unless @payment_details.empty? %>
+      <%= form_tag(delete_payment_detail_path, method: :delete, data: { turbo: false }, class: "form-inline mt-3") do %>
+        <div class="input-group">
+          <%= select_tag "id", options_from_collection_for_select(@payment_details, "id", lambda { |payment_detail| "#{payment_detail.card_type} ending with #{payment_detail.card_no.last(4)}" }), class: "custom-select mt-2" %>
+          <div class="input-group-append">
+            <%= submit_tag "Delete", class: "btn btn-danger" %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+  </div>
+</body>
+</html>

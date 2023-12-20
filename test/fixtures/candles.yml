@@ -1,0 +1,42 @@
+# == Schema Information
+#
+# Table name: candles
+#
+#  id           :bigint           not null, primary key
+#  color        :string
+#  description  :text
+#  design_style :string
+#  fragrance    :string
+#  name         :string
+#  pet_type     :string
+#  price        :integer
+#  silhouette   :string
+#  size         :string
+#  wax_type     :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
+
+one:
+  name: MyString
+  description: MyText
+  color: MyString
+  size: MyString
+  fragrance: MyString
+  wax_type: MyString
+  pet_type: MyString
+  silhouette: MyString
+  design_style: MyString
+  price: 1
+
+two:
+  name: MyString
+  description: MyText
+  color: MyString
+  size: MyString
+  fragrance: MyString
+  wax_type: MyString
+  pet_type: MyString
+  silhouette: MyString
+  design_style: MyString
+  price: 1

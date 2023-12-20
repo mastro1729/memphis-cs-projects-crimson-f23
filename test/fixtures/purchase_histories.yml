@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  candle_name: MyString
+  candle_desc: MyString
+  candle_pet_type: MyString
+  candle_price: 1
+  candle_quantity: 1
+  payment_card_no: MyString
+  payment_card_type: MyString
+
+two:
+  candle_name: MyString
+  candle_desc: MyString
+  candle_pet_type: MyString
+  candle_price: 1
+  candle_quantity: 1
+  payment_card_no: MyString
+  payment_card_type: MyString

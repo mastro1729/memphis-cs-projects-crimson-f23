@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmation</title>
+  <style>
+
+    .container {
+      width: 80%;
+      max-width: 800px;
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .header-text {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .pickup-address {
+      font-style: italic;
+      color: #666;
+    }
+
+    .item-details{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+     .cart-item {
+      display: flex;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .item-details {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .candle-image img {
+      width: 120px;
+      height: 140px;
+      margin-right: 20px;
+    }
+
+    .menu-item-info {
+      flex: 1;
+    }
+
+    .menu-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .menu-item-name {
+      font-weight: bold;
+    }
+
+    .menu-item-quantity {
+      margin-top: 8px;
+    }
+
+    .payment-details {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    .card-type {
+      margin-right: 10px;
+    }
+
+    .payment-card-type {
+      width: 50px; /* Adjust as needed */
+      height: auto;
+    }
+
+    .card-ending {
+      flex-grow: 1;
+      text-align: right;
+    }
+
+    .order-summary {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 15px;
+      margin-top: 20px;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .item-label {
+      font-weight: bold;
+    }
+
+    .total {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid #ccc;
+      margin-top: 10px;
+      padding-top: 5px;
+    }
+
+    .button-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content:center;
+      padding-top: 15px;
+    }
+
+    .button-primary {
+      background-color: #3498db;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+
+    .link-secondary {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <table>
+      <tr>
+        <th colspan="2" class="header-text">Order Confirmation</th>
+      </tr>
+      <tr>
+        <td>Customer</td>
+        <td><%= @order_details[:customer].email %></td>
+      </tr>
+      <tr>
+        <td>Service Type</td>
+        <td>Pick-up</td>
+      </tr>
+      <tr>
+        <td>Pickup Address</td>
+        <td class="pickup-address">1234 Southern Ave, Memphis, 38111</td>
+      </tr>
+        <tr>
+        <th colspan="2" class="header-text">Cart Items</th>
+      </tr>
+          </table>
+  <div class="cart-items">
+      <% @cart_items.each do |cart_item| %>
+        <div class="cart-item">
+          <div class="item-details">
+            <div class="candle-image">
+              <%= image_tag(cart_item.candle.image, class: 'small-image') %>
+            </div>
+            <div class="menu-item-info">
+              <div class="menu-item-header">
+                <div class="menu-item-name">
+                  <%= cart_item.candle.name %>
+                </div>
+                <div class="menu-item-price" style="font-weight: bold;">
+                  $<%= cart_item.candle.price %>
+                </div>
+              </div>
+              <div class="menu-item-desc">
+                <%= cart_item.candle.description %> (<%= cart_item.candle.pet_type %>)
+              </div>
+              <div class="menu-item-quantity">
+                <b>Quantity: <%= cart_item.quantity %></b>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <table>
+      <tr>
+        <th colspan="2" class="header-text">Payment Details</th>
+      </tr>
+    </table>
+      <div class="payment-details">
+        <% card_type = @order_details[:payment_detail].card_type.downcase %>
+        <% card_image = case card_type
+                          when 'visa'
+                            image_path('visa.jpeg')
+                          when 'mastercard'
+                            image_path('mastercard.jpeg')
+                          when 'americanexpress'
+                            image_path('americanexpress.jpeg')
+                          else
+                            nil
+                        end %>
+
+        <% if card_image %>
+          <div class="card-type">
+            <%= image_tag(card_image, class: 'payment-card-type') %>
+          </div>
+        <% end %>
+        <div class="card-ending">
+          <span class="font-weight-bold text-ash">
+            Card Ending with <%= @order_details[:payment_detail].card_no.last(4) %>
+          </span>
+        </div>
+      </div>
+      </table>
+      <table>
+      <tr>
+        <th colspan="2" class="header-text">Order Summary</th>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <td colspan="2">Reward You will earn from this Order is  $<%= @order_details[:reward_earned] %></td>
+      </tr>
+    </table>
+      <div class="order-summary">
+        <div class="summary-item">
+          <span class="item-label">Item count:</span>
+          <span><%= @cart_items.sum(&:quantity) %></span>
+        </div>
+        <% @cart_items.each do |cart_item| %>
+          <div class="summary-item">
+            <span class="item-label">🕯 <%= cart_item.candle.name %> (Quantity: <%= cart_item.quantity %> x $<%= cart_item.candle.price %>):</span>
+            <span>$<%= cart_item.quantity * cart_item.candle.price %></span>
+          </div>
+        <% end %>
+        <div class="summary-item">
+          <span class="item-label">Shipping & Handling:</span>
+          <span>$0</span>
+        </div>
+        <div class="summary-item">
+          <span class="item-label">Estimated Tax:</span>
+          <span>$0</span>
+        </div>
+        <div class="summary-item">
+          <span class="item-label">Discount from Rewards:</span>
+          <span>- $<%= @discount_from_rewards %></span>
+        </div>
+        <div class="total">
+          <span class="item-label">Order Total:</span>
+          <span>$<%= @adjusted_total_order_price %></span>
+        </div>
+      </div>
+      <div class="button-container">
+        <%= link_to 'Back to Payment Method List', payment_details_path, class: 'button-primary' %>
+        <%= form_tag(create_order_path, method: :post, data: { turbo: false }) do %>
+          <%= hidden_field_tag :payment_method, @order_details[:payment_detail].id %>
+          <%= submit_tag 'Place Order', class: 'button-primary' %>
+        <% end %>
+      </div>
+
+  </div>
+
+</body>
+</html>

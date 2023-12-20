@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vendor Order Details</title>
+  <style>
+    body {
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      padding-top: 10px;
+    }
+
+    .order-card {
+      transition: transform 0.3s ease;
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+      padding-bottom:13px;
+    }
+
+    .order-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-footer {
+      background-color: #f9f9f9;
+      border-top: 1px solid #ddd;
+      padding: 1rem;
+    }
+
+    .expanded-details {
+      display: none;
+    }
+
+    .expanded-details.active {
+      display: block;
+    }
+
+    .item-details{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .candle-image img {
+      width: 120px;
+      height: 120px;
+      margin-right: 20px;
+    }
+
+    .menu-item-info {
+      flex: 1;
+    }
+
+    .menu-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .menu-item-name {
+      font-weight: bold;
+    }
+
+    .menu-item-quantity {
+      margin-top: 8px;
+      font-weight: bold;
+    }
+
+.toggle-button {
+  cursor: pointer;
+  padding: 1px 12px;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  background-color: #3498db;
+  border-radius: 5px;
+  color: #fff;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.toggle-button:hover {
+  background-color: #2980b9;
+}
+
+    .list-group-item {
+      color: black;
+      display: flex;
+      align-items: center;
+    }
+
+
+    .payment-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.card-type {
+  margin-right: 10px;
+}
+
+.payment-card-type {
+  width: 50px; /* Adjust as needed */
+  height: auto;
+}
+
+.card-ending {
+  flex-grow: 1;
+  text-align: right;
+}
+
+.tick-icon {
+    display: inline-block;
+    width: 15px;
+    height: 13px;
+    background-image: url('https://martielbeatty.com/wp-content/uploads/2018/03/green-tick-png-green-tick-icon-image-14141-1000.png'); /* Replace 'green-tick-icon.png' with your icon */
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: zoomInOut 2s infinite;
+    margin-right:5px;
+  }
+
+  @keyframes zoomInOut {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.9);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+    .reward-points {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    }
+
+    .reward-points i {
+    font-size: 24px;
+    margin-right: 5px;
+    color: #f9a825;
+    }
+
+    .reward-points span {
+    font-weight: bold;
+    font-size: 18px;
+    }
+
+
+    .customer-email {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    }
+
+    .customer-email i {
+    font-size: 24px;
+    margin-right: 7px;
+    margin-left:2px;
+    color: #3498db;
+    }
+
+    .customer-email span {
+    font-weight: bold;
+    font-size: 18px;
+    }
+
+    .status-tag {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .status-tag.cancelled {
+      background-color: #e74c3c;
+      color: #fff;
+    }
+    
+    .status-tag.pick-up {
+      background-color: #f39c12;
+      color: #fff;
+    }
+    
+    .status-tag.picked-up {
+      background-color: #2ecc71;
+      color: #fff;
+    }
+    
+    .status-tag.default {
+      background-color: #7f8c8d;
+      color: #fff;
+    }
+
+    .status-icon {
+      margin-right: 5px;
+    }
+
+    .order-id {
+      font-size: 20px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #3498db;
+    }
+
+    .purchase-history-header{
+        font-size: 15px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #3498db;
+        margin-bottom: 10px;
+    }
+
+    .orders{
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #3498db;
+        margin-bottom: 10px;
+    }
+
+    .order-empty-message {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 30px;
+    border-radius: 5px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .empty-order-image {
+    max-width: 200px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .empty-order-text {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .empty-order-subtext {
+    color: #888;
+    margin-bottom: 20px;
+  }
+
+  .btn-shop-now {
+    background-color: #ff6d00;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-shop-now:hover {
+    background-color: #e06000;
+  }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h4 class="text-center orders">All Orders</h4>
+
+<div class="filter-options text-center mb-3 " style="display:flex;justify-content: flex-end; align-items:center;">
+<div>
+    <button onclick="showAllOrders()" class="btn btn-primary mr-2">
+      <i class="fas fa-list"></i> View All Orders
+    </button>
+  <button onclick="filterOrders('waitingForPickup')" class="btn btn-info mr-2">
+    <i class="fas fa-clock"></i> Waiting for Pickup
+  </button>
+  <button onclick="filterOrders('pickedUp')" class="btn btn-success mr-2">
+    <i class="fas fa-check-circle"></i> Picked Up
+  </button>
+  <button onclick="filterOrders('cancelled')" class="btn btn-danger">
+    <i class="fas fa-ban"></i> Cancelled
+  </button>
+</div>
+</div>
+
+<% if @orders.empty? %>
+  <div class="order-empty-message text-center py-5 my-5">
+    <img src="http://clipart-library.com/image_gallery/n730454.png" alt="Empty order Image" class="empty-order-image mb-3 pl-4">
+    <p class="empty-order-text">No Orders Placed Till Now.</p>
+    <p class="empty-order-subtext">Looks like customers haven't Ordered anything yet.</p>
+  </div>
+<% else %>
+
+    <% @orders.each do |order| %>
+      <div class="card mb-3 order-card" data-order-id="<%= order.id %>">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center" style="margin-bottom:10px;">
+                <h3 class="order-id">ORDER ID: <%= order.id %></h3>
+                <% if order.status === 'need_to_pick_up' %>
+                    <div class="status-update-buttons">
+                        <button class="btn btn-success btn-sm mr-2" onclick="markAsDelivered(<%= order.id %>)">
+                            <i class="fas fa-check"></i> Delivered
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="markAsCancelled(<%= order.id %>)">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                <% end %>
+            </div>
+            <% if order.status === 'cancelled' %>
+            <span class="status-tag">
+                <span class="status-tag cancelled"><i class="fas fa-ban status-icon"></i> Cancelled</span>
+            </span>
+            <% elsif order.status === 'need_to_pick_up' %>
+            <span class="status-tag">
+                <span class="status-tag pick-up"><i class="fas fa-clock status-icon"></i> Waiting For Pick Up</span>
+            </span>
+            <% elsif order.status === 'picked-up' %>
+            <span class="status-tag">
+                <span class="status-tag picked-up"><i class="fas fa-check-circle status-icon"></i> Picked Up</span>
+            </span>
+            <% else %>
+            <span class="status-tag">
+                <span class="status-tag default"><i class="fas fa-question-circle status-icon"></i> <%= order.status %></span>
+            </span>
+            <% end %>
+
+            <div class="payment-details">
+                <div class="card-type">
+                    <% card_type = order.purchase_histories[0].payment_card_type.downcase %>
+                    <% card_image = case card_type
+                                        when 'visa'
+                                            image_path('visa.jpeg')
+                                        when 'mastercard'
+                                            image_path('mastercard.jpeg')
+                                        when 'americanexpress'
+                                            image_path('americanexpress.jpeg')
+                                        else
+                                            nil
+                                    end %>
+
+                    <% if card_image %>
+                        <%= image_tag(card_image, class: 'payment-card-type') %>
+                    <% end %>
+                    <span class="font-weight-bold text-ash ml-3">
+                        Card Ending with <%= order.purchase_histories[0].payment_card_no.last(4) %>
+                    </span>
+                </div>
+                <div class="card-ending">
+                <% if order.is_payment_done %>
+                    <span class="tick-icon"></span>
+                <% else %>
+                    <span class="tick-icon"></span>
+                <% end %>
+                <span class="mb-0" style="font-weight:bold;"><%= order.is_payment_done ? 'Payment Done' : 'Payment Pending' %></span>
+                </div>
+            </div>
+            <div class="customer-email">
+                <i class="fas fa-user" style="font-size: 15px;"></i>
+                <span style="font-weight: bold; font-size:13px;">
+                    Ordered by <%= order.customer.email %> on <%= order.created_at.strftime("%B %d, %Y") %> at <%= order.created_at.strftime("%I:%M %p") %>
+                </span>
+            </div>
+            <div class="reward-points">
+                <i class="fas fa-star" style="font-size: 15px;"></i>
+                <span style="font-weight: bold; font-size:13px;">Reward Points Earned From This Order: <%= order.order_reward %></span>
+            </div>
+            <% if order.status == 'cancelled' %>
+              <div class="mt-2" style="color:red">
+                <i class="fas fa-ban" style="font-size: 15px;"></i>
+                <span class="message-tag" style="font-weight: bold; font-size:13px;">
+                  Payment has been processed, and the refunded amount will be credited to your account within the next 5-7 business days.
+                </span>
+              </div>
+            <% end %>
+        </div>
+
+        <div class="toggle-button" onclick="toggleDetails(this.parentElement)">
+        Show More
+        </div>
+
+        <div class="card-body expanded-details">
+        <h4 class="purchase-history-header">Items Purchased in this Order</h4>
+        <div class="list-group purchase-history">
+            <% order.purchase_histories.each do |purchase| %>
+            <div class="list-group-item">
+                <div class="item-details">
+                <div class="candle-image">
+                    <%= image_tag(purchase.image, class: 'small-image') %>
+                </div>
+                <div class="menu-item-info">
+                    <div class="menu-item-header">
+                    <div class="menu-item-name">
+                        Candle Name: <%= purchase.candle_name %>
+                    </div>
+                    <div style='font-weight:bold;'>
+                        Price: <%= purchase.candle_price %>
+                    </div>
+                    </div>
+                    <div class="menu-item-desc">
+                    Description: <%= purchase.candle_desc %> (Pet Type: <%= purchase.candle_pet_type %>)
+                    </div>
+                    <div class="menu-item-quantity">
+                    Quantity: <%= purchase.candle_quantity %>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <% end %>
+        </div>
+        </div>
+      </div>
+    <% end %>
+    <% end %>
+  </div>
+
+  <script>
+    function toggleDetails(element) {
+      const expandedDetails = element.querySelector('.expanded-details');
+      expandedDetails.classList.toggle('active');
+      const toggleButton = element.querySelector('.toggle-button');
+      toggleButton.textContent = expandedDetails.classList.contains('active') ? 'Show Less' : 'Show More';
+    }
+  </script>
+</body>
+<script>
+  function markAsDelivered(orderId) {
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    $.ajax({
+      type: 'PATCH',
+      url: '/orders/' + orderId + '/delivered',
+      beforeSend: function(xhr) {
+       xhr.setRequestHeader('X-CSRF-Token', token);
+     },
+      success: function(response) {
+        console.log('Order marked as delivered');
+
+        // Update the UI based on the response
+        const orderElement = document.querySelector(`.order-card[data-order-id="${orderId}"]`);
+        console.log(orderElement)
+        if (orderElement) {
+          const buttonsContainer = orderElement.querySelector('.status-update-buttons');
+          const statusTag = orderElement.querySelector('.status-tag');
+
+          console.log(buttonsContainer)
+          console.log(statusTag);
+          if (buttonsContainer && statusTag) {
+              console.log(response.message)
+            if (response.message === 'cancelled' || response.message === 'picked-up') {
+              // Hide the buttons container if the message is 'cancelled' or 'picked-up'
+
+              buttonsContainer.style.display = 'none';
+
+              if (response.message === 'cancelled') {
+                statusTag.innerHTML = '<span class="status-tag cancelled"><i class="fas fa-ban status-icon"></i> Cancelled</span>';
+              } else {
+                statusTag.innerHTML = '<span class="status-tag picked-up"><i class="fas fa-check-circle status-icon"></i> Picked Up</span>';
+              }
+            }
+          }
+        }
+      },
+      error: function(error) {
+        console.error('Error marking order as delivered:', error);
+      }
+    });
+  }
+
+    function markAsCancelled(orderId) {
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    $.ajax({
+      type: 'PATCH',
+      url: '/orders/' + orderId + '/cancelled',
+      beforeSend: function(xhr) {
+       xhr.setRequestHeader('X-CSRF-Token', token);
+     },
+      success: function(response) {
+        console.log('Order marked as delivered');
+
+        // Update the UI based on the response
+        const orderElement = document.querySelector(`.order-card[data-order-id="${orderId}"]`);
+        console.log(orderElement)
+        if (orderElement) {
+          const buttonsContainer = orderElement.querySelector('.status-update-buttons');
+          const statusTag = orderElement.querySelector('.status-tag');
+
+          console.log(buttonsContainer)
+          console.log(statusTag);
+          if (buttonsContainer && statusTag) {
+              console.log(response.message)
+            if (response.message === 'cancelled' || response.message === 'picked-up') {
+              // Hide the buttons container if the message is 'cancelled' or 'picked-up'
+
+              buttonsContainer.style.display = 'none';
+
+              if (response.message === 'cancelled') {
+                statusTag.innerHTML = '<span class="status-tag cancelled"><i class="fas fa-ban status-icon"></i> Cancelled</span>';
+              } else {
+                statusTag.innerHTML = '<span class="status-tag picked-up"><i class="fas fa-check-circle status-icon"></i> Picked Up</span>';
+              }
+            }
+          }
+        }
+      },
+      error: function(error) {
+        console.error('Error marking order as delivered:', error);
+      }
+    });
+  }
+
+function filterOrders(status) {
+  const orderCards = document.querySelectorAll('.order-card');
+  
+  orderCards.forEach(card => {
+    const orderStatus = card.querySelector('.status-tag').textContent.trim().toLowerCase();
+    if (status === 'waitingForPickup' && orderStatus !== 'waiting for pick up') {
+      card.style.display = 'none';
+    } else if (status === 'pickedUp' && orderStatus !== 'picked up') {
+      card.style.display = 'none';
+    } else if (status === 'cancelled' && orderStatus !== 'cancelled') {
+      card.style.display = 'none';
+    } else {
+      card.style.display = 'block';
+    }
+  });
+}
+
+function showAllOrders() {
+  const orderCards = document.querySelectorAll('.order-card');
+  
+  orderCards.forEach(card => {
+    card.style.display = 'block';
+  });
+}
+
+</script>
+</html>

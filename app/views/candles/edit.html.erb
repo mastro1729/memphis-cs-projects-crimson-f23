@@ -1,0 +1,126 @@
+<h1>Edit Candle Item</h1>
+
+<%= form_with model: @candle, url: update_candle_path, method: :patch, data: { turbo: false } do |form| %>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <%= form.label :name, class: "font-weight-bold" %>
+      <%= form.text_field :name, class: "form-control" %>
+      <% if @candle.errors.has_key?(:name) %>
+        <p class="text-danger"><%= @candle.errors[:name].first %></p>
+      <% end %>
+    </div>
+
+    <div class="form-group col-md-6">
+      <%= form.label :description, class: "font-weight-bold" %>
+      <%= form.text_area :description, class: "form-control" %>
+      <% if @candle.errors.has_key?(:description) %>
+        <p class="text-danger"><%= @candle.errors[:description].first %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <%= form.label :price, class: "font-weight-bold" %>
+      <%= form.text_field :price, class: "form-control" %>
+      <% if @candle.errors.has_key?(:price) %>
+        <p class="text-danger"><%= @candle.errors[:price].first %></p>
+      <% end %>
+    </div>
+
+    <div class="form-group col-md-6">
+      <%= form.label :color, class: "font-weight-bold" %>
+      <%= form.select :color, @color_options, { include_blank: true }, class: "form-control" %>
+      <% if @candle.errors.has_key?(:color) %>
+        <p class="text-danger"><%= @candle.errors[:color].first %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <%= form.label :size, class: "font-weight-bold" %>
+      <%= form.select :size, @size_options, { include_blank: true },  class: "form-control" %>
+            <% if @candle.errors.has_key?(:size) %>
+        <p class="text-danger"><%= @candle.errors[:size].first %></p>
+      <% end %>
+    </div>
+
+    <div class="form-group col-md-6">
+      <%= form.label :fragrance, class: "font-weight-bold" %>
+      <%= form.select :fragrance, @fragrance_options, { include_blank: true }, class: "form-control" %>
+      <% if @candle.errors.has_key?(:fragrance) %>
+        <p class="text-danger"><%= @candle.errors[:fragrance].first %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <%= form.label :wax_type, class: "font-weight-bold" %>
+      <%= form.select :wax_type, @wax_type_options, { include_blank: true }, class: "form-control" %>
+            <% if @candle.errors.has_key?(:wax_type) %>
+        <p class="text-danger"><%= @candle.errors[:wax_type].first %></p>
+      <% end %>
+    </div>
+
+    <div class="form-group col-md-6">
+      <%= form.label :pet_type, class: "font-weight-bold" %>
+      <%= form.select :pet_type, @pet_type_options, { include_blank: true }, class: "form-control" %>
+            <% if @candle.errors.has_key?(:pet_type) %>
+        <p class="text-danger"><%= @candle.errors[:pet_type].first %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <%= form.label :silhouette, class: "font-weight-bold" %>
+      <%= form.select :silhouette, @silhouette_options, { include_blank: true }, class: "form-control" %>
+            <% if @candle.errors.has_key?(:silhouette) %>
+        <p class="text-danger"><%= @candle.errors[:silhouette].first %></p>
+      <% end %>
+    </div>
+
+    <div class="form-group col-md-6">
+      <%= form.label :design_style, class: "font-weight-bold" %>
+      <%= form.select :design_style, @design_style_options, { include_blank: true }, class: "form-control" %>
+            <% if @candle.errors.has_key?(:design_style) %>
+        <p class="text-danger"><%= @candle.errors[:design_style].first %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="form-row">
+  
+    <%= form.fields_for :inventory do |inventory_form| %>
+    <div class="form-group col-md-6">
+        <%= inventory_form.label :count, class: "font-weight-bold" %>
+        <%= inventory_form.number_field :count, class: "form-control", value: @candle.inventory&.count %>
+        <% if @candle.inventory.errors.has_key?(:count) %>
+        <p class="text-danger"><%= @candle.inventory.errors[:count].first %></p>
+        <% end %>
+    </div>
+    <% end %>
+
+    <div class="form-group col-md-6">
+    <%= form.label :image, class: "font-weight-bold" %>
+    <%= form.file_field :image, class: "form-control-file mb-2"%>
+    <% if @candle.errors.has_key?(:image) %>
+        <p class="text-danger"><%= @candle.errors[:image].first %></p>
+    <% end %>
+    <% if @candle.image.attached? %>
+        <%= image_tag @candle.image.variant(resize: "200x200"), class: "img-thumbnail" %>
+    <% end %>
+    </div>
+</div>
+
+  <div class="form-group text-center">
+    <div class="btn-group">
+      <%= link_to "Back", request.referer || candles_path, class: "btn btn-primary" %>
+      <%= form.submit "Save", class: "ml-2 btn btn-primary" %>
+    </div>
+  </div>
+
+<% end %>

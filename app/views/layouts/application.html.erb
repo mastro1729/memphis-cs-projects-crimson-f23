@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pєt-Thємєd-Pαrту-Cαndlєs</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag 'https://code.jquery.com/jquery-3.6.0.min.js' %>
+    <%= javascript_include_tag 'https://cdn.jsdelivr.net/npm/turbolinks' %>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/db8f46e11d.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <%= javascript_importmap_tags %>
+  </head>
+
+<style>
+
+    .nav-link:hover {
+        color: #007BFF !important;
+    }
+
+    .navbar{
+      margin-left: 10px;
+      margin-right:10px;
+    }
+
+    .content{
+      height:89vh;
+      overflow:auto;
+      box-shadow:0 2px 14px rgba(0, 0, 0, 0.2);;
+      padding:1rem;
+      width:90%;
+      margin:auto auto;
+    }
+
+    .footer{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    #cart-count-badge{
+      position:absolute;
+    }
+
+    .nav-item.active .nav-link {
+      color: #007BFF !important;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+</style>
+
+<body>
+    <%= render 'shared/flash' %>
+
+ <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">🐾 Pєt-Thємєd-Pαrту-Cαndlєs 🕯</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item <%= active_class(candles_path) %>">
+                <%= link_to candles_path, class: "nav-link" do %>
+                  <i class="fas fa-home"></i> Home
+                <% end %>
+              </li>
+              <li class="nav-item <%= active_class(search_filter_path) %>">
+                  <%= link_to search_filter_path, class:"nav-link" do %>
+                    <i class="fas fa-search"></i> Search & Filter
+                  <% end %>
+              </li>
+
+              <% if vendor_signed_in? %>
+                <li class="nav-item <%= active_class(all_orders_path) %>">
+                  <%= link_to all_orders_path, class: "nav-link" do %>
+                    <i class="fas fa-tasks"></i> Manage Orders
+                  <% end %>
+                </li>
+              <% end %>
+
+              <% if customer_signed_in? %>
+
+              <li class="nav-item <%= active_class(reminders_path) %>">
+                  <%= link_to reminders_path, class:"nav-link" do %>
+                    <i class="fas fa-clock"></i> Manage Reminders
+                  <% end %>
+              </li>
+
+              <li class="nav-item pr-2 <%= active_class(cart_items_path) %>">
+                <%= link_to cart_items_path, class: "nav-link", title: "Cart Items", data: { toggle: "tooltip", placement: "bottom" } do %>
+                  <i class="fas fa-shopping-cart" style="font-size:19px;"></i>
+                  <span class="badge badge-danger badge-pill" id="cart-count-badge"><%= current_customer.cart_items.sum(:quantity).to_i %></span>
+                <% end %>
+              </li>
+                <% end %>
+                <% if customer_signed_in? %>
+                <li class="nav-item pr-2 ml-2 <%= active_class(my_orders_path) %>">
+                  <%= link_to my_orders_path, class: "nav-link", title: "Orders & Reward History", data: { toggle: "tooltip", placement: "bottom" } do %>
+                    <i class="fas fa-coins" style="font-size: 19px;"></i>
+                    <span class="badge badge-danger badge-pill" id="cart-count-badge">
+                      <% if current_customer.global_reward.present? %>
+                        <%= current_customer.global_reward.reward_points_remaining %>
+                      <% else %>
+                        0
+                      <% end %>
+                    </span>
+                  <% end %>
+                </li>
+                <% end %>
+              <ul style="display:flex;list-style:none;">
+                <li class="nav-item">
+                  <div class="dropdown">
+                    <a class="nav-link btn btn-link dropdown-toggle" style="font-weight:bold; color:green; padding-bottom:4px;" href="#" role="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <% if customer_signed_in? || vendor_signed_in? %>
+                        <%= "C, #{current_customer.email}" if customer_signed_in? %>
+                        <%= "A, #{current_vendor.email}" if vendor_signed_in? %>
+                      <% else %>
+                        Sign In / Sign Up
+                      <% end %>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="userDropdown">
+                      <% if customer_signed_in? %>
+                        <%= link_to 'Edit Details', edit_customer_registration_path, class: "dropdown-item" %>
+                        <%= button_to 'Sign Out', destroy_customer_session_path, method: :delete, data: { turbo: false }, class: 'dropdown-item' %>
+                      <% elsif vendor_signed_in? %>
+                        <%= link_to 'Edit Details', edit_vendor_registration_path, class: "dropdown-item" %>
+                        <%= button_to 'Sign Out', destroy_vendor_session_path, method: :delete, data: { turbo: false }, class: 'dropdown-item' %>
+                      <% else %>
+                        <%= link_to 'Customer Sign In', new_customer_session_path, class: "dropdown-item #{active_class(new_customer_session_path)}" %>
+                        <%= link_to 'Customer Sign Up', new_customer_registration_path, class: "dropdown-item #{active_class(new_customer_registration_path)}" %>
+                        <%= link_to 'Vendor Sign In', new_vendor_session_path, class: "dropdown-item #{active_class(new_vendor_session_path)}" %>
+                      <% end %>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </ul>
+        </div>
+    </nav>
+
+  <main role="main" class="content">
+      <%= yield %>
+  </main>
+  <div class="footer">
+    <span>© 2023 Team Crimson. All rights reserved.</span>
+  </div>
+  </body>
+</html>
